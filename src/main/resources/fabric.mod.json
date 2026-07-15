@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "shrinkbomb",
+  "version": "1.0.0",
+  "name": "ShrinkBomb",
+  "description": "A custom bomb that shrinks everything inside a glass box",
+  "authors": ["yoavsorias-collab"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.yourname.modnamehere.ShrinkBomb"]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21",
+    "java": ">=21"
+  }
+}
