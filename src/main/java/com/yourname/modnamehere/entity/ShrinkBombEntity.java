@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import com.yourname.modnamehere.util.GlassBoxBuilder;
 import com.yourname.modnamehere.util.ScalingSystem;
 import com.yourname.modnamehere.util.EmeraldReleaseSystem;
+import com.yourname.modnamehere.util.ExplosionEffects;
 import com.yourname.modnamehere.ShrinkBombItems;
 
 public class ShrinkBombEntity extends ThrownItemEntity {
@@ -60,7 +61,8 @@ public class ShrinkBombEntity extends ThrownItemEntity {
 		// Schedule emerald release (3 minutes later)
 		EmeraldReleaseSystem.scheduleEmeraldRelease(world, this.explosionCenter);
 
-		// TODO: Add particles and sounds for explosion effect
+		// Play explosion effects (sounds and particles)
+		ExplosionEffects.playExplosionEffects(world, this.explosionCenter);
 	}
 
 	@Override
