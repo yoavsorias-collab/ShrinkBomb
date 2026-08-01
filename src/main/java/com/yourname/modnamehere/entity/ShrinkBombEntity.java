@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import com.yourname.modnamehere.util.GlassBoxBuilder;
 import com.yourname.modnamehere.util.ScalingSystem;
+import com.yourname.modnamehere.util.EmeraldReleaseSystem;
 import com.yourname.modnamehere.ShrinkBombItems;
 
 public class ShrinkBombEntity extends ThrownItemEntity {
@@ -15,6 +16,7 @@ public class ShrinkBombEntity extends ThrownItemEntity {
 	public static final int FUSE_TIME = 40; // 2 seconds (40 ticks)
 	private int fuseTimer = FUSE_TIME;
 	private boolean hasExploded = false;
+	private BlockPos explosionCenter;
 
 	public ShrinkBombEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
 		super(entityType, world);
@@ -43,20 +45,22 @@ public class ShrinkBombEntity extends ThrownItemEntity {
 
 	private void explode() {
 		World world = this.getWorld();
-		BlockPos centerPos = this.getBlockPos();
+		this.explosionCenter = this.getBlockPos();
 
 		// Create glass box
-		GlassBoxBuilder.buildGlassBox(world, centerPos);
+		GlassBoxBuilder.buildGlassBox(world, this.explosionCenter);
 
 		// Scale all entities inside the box
 		world.getEntitiesByClass(
 			net.minecraft.entity.Entity.class,
 			this.getBoundingBox().expand(15),
-			entity -> entity != this && GlassBoxBuilder.isInsideBox(entity.getBlockPos(), centerPos)
+			entity -> entity != this && GlassBoxBuilder.isInsideBox(entity.getBlockPos(), this.explosionCenter)
 		).forEach(ScalingSystem::scaleEntity);
 
-		// TODO: Add emerald release mechanism (3 minutes later)
-		// TODO: Add particles and sounds
+		// Schedule emerald release (3 minutes later)
+		EmeraldReleaseSystem.scheduleEmeraldRelease(world, this.explosionCenter);
+
+		// TODO: Add particles and sounds for explosion effect
 	}
 
 	@Override
@@ -77,5 +81,9 @@ public class ShrinkBombEntity extends ThrownItemEntity {
 
 	public int getFuseTimer() {
 		return this.fuseTimer;
+	}
+
+	public BlockPos getExplosionCenter() {
+		return this.explosionCenter;
 	}
 }
